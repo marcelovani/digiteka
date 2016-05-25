@@ -1,0 +1,6 @@
+name = Digiteka
+core = 7.x
+package = Advertising
+php = 5.2.4
+dependencies[] = wysiwyg
+configure = admin/config/system/digiteka

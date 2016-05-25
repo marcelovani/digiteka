@@ -1,0 +1,183 @@
+<?php
+/**
+ * @file
+ * Code for Digiteka.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function digiteka_menu() {
+  $items['admin/config/system/digiteka'] = array(
+    'title' => 'Digiteka',
+    'description' => 'Configure Digiteka.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('digiteka_admin_settings_form'),
+    'access arguments' => array('administer digiteka'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'digiteka.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_wysiwyg_include_directory().
+ */
+function digiteka_wysiwyg_include_directory($type) {
+  switch ($type) {
+    case 'plugins':
+      return $type;
+  }
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function digiteka_node_view($node, $view_mode, $langcode) {
+  if (!$mdtk = variable_get('digiteka_mdtk')) {
+    // No digiteka id has been set so do nothing.
+    return;
+  }
+
+  // Position where to insert the widget.
+  $position = digiteka_position();
+
+  // Bundles to insert the widget.
+  $bundles = digiteka_bundles();
+
+  if (!in_array($node->type, $bundles)) {
+    return;
+  }
+
+  // Do nothing if not the full view mode.
+  if ($view_mode != 'full') {
+    return;
+  }
+
+  // Do nothing if there is no body content.
+  if (empty($node->content['body'][0]['#markup'])) {
+    return;
+  }
+  $content = &$node->content['body'][0]['#markup'];
+
+  // Not on admin paths (just in case).
+  if (path_is_admin(current_path())) {
+    return;
+  }
+
+  // Published date of the node.
+  $date = date('Ymd', $node->changed);
+  // hook_digiteka_date_alter().
+  drupal_alter('digiteka_date', $date);
+
+
+  // We use this variable to determine if external JS need to be injected.
+  $status = FALSE;
+
+  // Wysiwyg placeholder to be replaced for digiteka markup.
+  $placeholder = '<!--digiteka-placeholder-->';
+
+  // If a placeholder is found, replace it, otherwise insert the widget
+  // after the configured paragraph.
+  if (preg_match($placeholder, $content)) {
+
+    $dom = new DOMDocument('1.0');
+    $dom->formatOutput = TRUE;
+
+    // Add the digiteka element to the dom document.
+    $element = _digiteka_element($dom);
+    $dom->appendChild($element);
+    $markup = $dom->saveHTML();
+
+    if ($new_body = preg_replace("/" . $placeholder . "/", $markup, $content)) {
+      $status = TRUE;
+      $content = $new_body;
+    }
+
+  }
+  else {
+    $dom = filter_dom_load($content);
+
+    $count = 0;
+    $body_list = $dom->getElementsByTagName('body');
+    foreach ($body_list as $body) {
+      // Count <p> tags.
+      foreach ($body->childNodes as $body_node) {
+        if (isset($body_node->tagName) && $body_node->tagName == 'p') {
+          $count++;
+        }
+
+        if ($count >= $position) {
+          $status = TRUE;
+          $element = _digiteka_element($dom);
+          $body_list->item(0)->insertBefore($element, $body_node->nextSibling);
+          $content = filter_dom_serialize($dom);
+          break;
+        }
+      }
+    }
+  }
+
+  // Insert external JS only if digiteka exist on page.
+  if ($status) {
+
+    $zone = NULL;
+    // hook_digiteka_zone_alter().
+    drupal_alter('digiteka_zone', $zone);
+
+    $js = 'var ULTIMEDIA_mdtk = "' . $mdtk . '";' . PHP_EOL;
+    $js .= 'var ULTIMEDIA_date = "' . $date . '";' . PHP_EOL;
+    $js .= 'var ULTIMEDIA_target = "ultimedia_wrapper";' . PHP_EOL;
+    $js .= 'var ULTIMEDIA_async = false;' . PHP_EOL;
+
+    if (!is_null($zone)) {
+      $js .= 'var ULTIMEDIA_zone = "' . $zone . '";' . PHP_EOL;
+    }
+
+    // Inline js added to header.
+    $node->content['field_body_value']['#attached']['js'][] = array(
+      'data' => $js,
+      'type' => 'inline',
+      'scope' => 'header',
+    );
+    // External js file included in the footer.
+    $node->content['field_body_value']['#attached']['js'][] = array(
+      'data' => 'http://www.ultimedia.com/js/common/smart.js',
+      'type' => 'external',
+      'scope' => 'footer',
+      'weight' => 1,
+    );
+  }
+}
+
+/**
+ * Helper to return the digiteka element.
+ */
+function _digiteka_element($dom_document) {
+  $wrapper = $dom_document->createElement('div');
+  $wrapper->setAttribute('id', 'digiteka_wrapper');
+
+  $inner = $dom_document->createElement('div');
+  $inner->setAttribute('id', 'ultimedia_wrapper');
+
+  $wrapper->appendChild($inner);
+
+  return $wrapper;
+}
+
+/**
+ * Bundles to insert the widget.
+ */
+function digiteka_bundles() {
+  return variable_get('digiteka_bundles', array(
+    'article',
+  ));
+}
+
+/**
+ * The paragraph position to place digiteka.
+ */
+function digiteka_position() {
+  return variable_get('digiteka_position', 6);
+}
