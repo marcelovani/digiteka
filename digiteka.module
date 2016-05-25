@@ -69,7 +69,8 @@ function digiteka_node_view($node, $view_mode, $langcode) {
   // Published date of the node.
   $date = date('Ymd', $node->changed);
   // hook_digiteka_date_alter().
-  drupal_alter('digiteka_date', $date);
+  $context = array('node' => $node);
+  drupal_alter('digiteka_date', $date, $context);
 
 
   // We use this variable to determine if external JS need to be injected.
@@ -124,7 +125,8 @@ function digiteka_node_view($node, $view_mode, $langcode) {
 
     $zone = NULL;
     // hook_digiteka_zone_alter().
-    drupal_alter('digiteka_zone', $zone);
+    $context = array('node' => $node);
+    drupal_alter('digiteka_zone', $zone, $context);
 
     $js = 'var ULTIMEDIA_mdtk = "' . $mdtk . '";' . PHP_EOL;
     $js .= 'var ULTIMEDIA_date = "' . $date . '";' . PHP_EOL;
