@@ -25,7 +25,7 @@ function digiteka_admin_settings_form() {
     '#type' => 'textfield',
     '#title' => t('Position'),
     '#default_value' => digiteka_position(),
-    '#description' => t('The paragraph before which to automatically add Digiteka.'),
+    '#description' => t('The paragraph after which to automatically add Digiteka.'),
   );
 
   // Which bundles can have Digiteka.
