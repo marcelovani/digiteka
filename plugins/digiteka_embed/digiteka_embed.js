@@ -14,6 +14,7 @@
 
     /**
      * Invoke is called when the toolbar button is clicked.
+     *
      * @param {object} data - The data object.
      * @param {object} settings - The settings object.
      * @param {number} instanceId - The instanceId value.
@@ -33,8 +34,10 @@
 
     /**
      * Replace all <!--digiteka-placeholder--> tags with the icon.
+     *
      * @param {string} content - The content value.
      * @param {object} settings - The settings object.
+     * @return {string} The html content.
      */
     attach: function (content, settings) {
       content = content.replace(/<!--digiteka-placeholder-->/g, this._getPlaceholder(settings));
@@ -43,7 +46,9 @@
 
     /**
      * Replace the icons with <!--digiteka-placeholder--> tags in content upon detaching editor.
+     *
      * @param {string} content - The content value.
+     * @return {string} The html content.
      */
     detach: function (content) {
       var $content = $('<div>' + content + '</div>');
@@ -57,7 +62,9 @@
     /**
      * Helper function to return a HTML placeholder.
      * Here we provide an image to visually represent the hidden HTML in the Wysiwyg editor.
+     * 
      * @param {object} settings - The settings object.
+     * @return {string} The html for the image.
      */
     _getPlaceholder: function (settings) {
       return '<img src="' + settings.path + '/images/digiteka.png" width="50px" alt="&lt;--digiteka-placeholder--&gt;" title="&lt;--digiteka-placeholder--&gt;" class="wysiwyg_plugin_digiteka-embed" />';
