@@ -1,6 +1,7 @@
 (function ($) {
 
   Drupal.wysiwyg.plugins.digiteka_embed = {
+
     /**
      * Return whether the passed node belongs to this plugin (note that "node" in this context is a JQuery node, not a Drupal node).
      *
@@ -10,6 +11,7 @@
     isNode: function (node) {
       return ($(node).is('img.wysiwyg_plugin_digiteka-embed'));
     },
+
     /**
      * Invoke is called when the toolbar button is clicked.
      */
@@ -25,6 +27,7 @@
         Drupal.wysiwyg.instances[instanceId].insert(content);
       }
     },
+
     /**
      * Replace all <!--digiteka-placeholder--> tags with the icon.
      */
@@ -32,6 +35,7 @@
       content = content.replace(/<!--digiteka-placeholder-->/g, this._getPlaceholder(settings));
       return content;
     },
+
     /**
      * Replace the icons with <!--digiteka-placeholder--> tags in content upon detaching editor.
      */
@@ -43,6 +47,7 @@
       });
       return $content.html();
     },
+
     /**
      * Helper function to return a HTML placeholder.
      *

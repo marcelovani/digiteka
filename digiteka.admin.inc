@@ -56,5 +56,6 @@ function digiteka_admin_settings_form_submit($form, &$form_state) {
  */
 function digiteka_admin_bundles() {
   $bundles = digiteka_bundles();
-  return join(',', $bundles);
+
+  return implode(',', $bundles);
 }
