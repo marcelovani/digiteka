@@ -37,6 +37,7 @@
      *
      * @param {string} content - The content value.
      * @param {object} settings - The settings object.
+     *
      * @return {string} The html content.
      */
     attach: function (content, settings) {
@@ -48,6 +49,7 @@
      * Replace the icons with <!--digiteka-placeholder--> tags in content upon detaching editor.
      *
      * @param {string} content - The content value.
+     *
      * @return {string} The html content.
      */
     detach: function (content) {
@@ -62,8 +64,9 @@
     /**
      * Helper function to return a HTML placeholder.
      * Here we provide an image to visually represent the hidden HTML in the Wysiwyg editor.
-     * 
+     *
      * @param {object} settings - The settings object.
+     * 
      * @return {string} The html for the image.
      */
     _getPlaceholder: function (settings) {
