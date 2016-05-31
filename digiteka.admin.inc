@@ -33,7 +33,7 @@ function digiteka_admin_settings_form() {
     '#type' => 'textfield',
     '#title' => t('Bundles'),
     '#default_value' => digiteka_admin_bundles(),
-    '#description' => t('Which bundles can have Digiteka, seperated by commas.'),
+    '#description' => t('Which bundles can have Digiteka, separated by commas.'),
   );
 
   $form['#submit'][] = 'digiteka_admin_settings_form_submit';
