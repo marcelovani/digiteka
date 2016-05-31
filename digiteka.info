@@ -1,6 +1,7 @@
 name = Digiteka
+description = Automatically enrich your content with relevant videos
 core = 7.x
-package = Advertising
+package = Media
 php = 5.2.4
 dependencies[] = wysiwyg
 configure = admin/config/system/digiteka
