@@ -72,7 +72,6 @@ function digiteka_node_view($node, $view_mode, $langcode) {
   $context = array('node' => $node);
   drupal_alter('digiteka_date', $date, $context);
 
-
   // We use this variable to determine if external JS need to be injected.
   $status = FALSE;
 
@@ -95,7 +94,6 @@ function digiteka_node_view($node, $view_mode, $langcode) {
       $status = TRUE;
       $content = $new_body;
     }
-
   }
   else {
     $dom = filter_dom_load($content);
