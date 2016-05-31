@@ -16,7 +16,7 @@ function digiteka_admin_settings_form() {
   $form['digiteka_mdtk'] = array(
     '#type' => 'textfield',
     '#title' => t('Digiteka Id'),
-    '#default_value' => taboola_get_setting('digiteka_mdtk'),
+    '#default_value' => variable_get('digiteka_mdtk'),
     '#description' => '',
   );
 
