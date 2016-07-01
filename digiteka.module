@@ -98,6 +98,13 @@ function digiteka_node_view($node, $view_mode, $langcode) {
   else {
     $dom = filter_dom_load($content);
 
+    $num_p_tags = $dom->getElementsByTagName('p')->length;
+    $min_paras = variable_get('digiteka_min_paragraphs', 8);
+    if ($num_p_tags < $min_paras) {
+      // Not enough paragraphs, so no digiteka.
+      return;
+    }
+
     $count = 0;
     $body_list = $dom->getElementsByTagName('body');
     foreach ($body_list as $body) {
