@@ -66,6 +66,15 @@ function digiteka_node_view($node, $view_mode, $langcode) {
     return;
   }
 
+  // Show or hide Digiteka.
+  $hide = FALSE;
+  // hook_digiteka_visibility_alter().
+  $context = array('node' => $node);
+  drupal_alter('digiteka_visibility', $hide, $context);
+  if ($hide) {
+    return;
+  }
+
   // Published date of the node.
   $date = date('Ymd', $node->changed);
   // hook_digiteka_date_alter().
