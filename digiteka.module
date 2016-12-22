@@ -53,8 +53,13 @@ function digiteka_node_view($node, $view_mode, $langcode) {
     return;
   }
 
+  $view_modes = array('full');
+  // hook_digiteka_view_modes_alter().
+  $context = array('node' => $node);
+  drupal_alter('digiteka_view_modes', $view_modes, $context);
+
   // Do nothing if not the full view mode.
-  if ($view_mode != 'full') {
+  if (!in_array($view_mode, $view_modes)) {
     return;
   }
 
