@@ -33,7 +33,7 @@ function digiteka_admin_settings_form() {
     '#type' => 'textfield',
     '#title' => t('Minimum number of paragraphs'),
     '#default_value' => digiteka_min_paragraphs(),
-    '#description' => t('The minimum number of paragraphs before Digiteka will automatically be added.'),
+    '#description' => t('The minimum number of paragraphs required for Digiteka to be added automatically.'),
   );
 
   // Which bundles can have Digiteka.
